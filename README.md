@@ -1,5 +1,5 @@
 # bibliotheque_cpp
 
-# qmake 
+## qmake 
 # make
 # ./bibliotheque
