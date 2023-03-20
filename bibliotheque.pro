@@ -20,5 +20,5 @@ QT += x11extras
 LIBS += -lmysqlclient
 
 # Input
-HEADERS += src/connexion.h src/livre.h src/livrewidget.h
+HEADERS += src/connexion.h src/livre.h src/livrewidget.h 
 SOURCES += src/connexion.cpp src/livre.cpp src/livrewidget.cpp src/main.cpp
