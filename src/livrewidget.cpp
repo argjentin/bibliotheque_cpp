@@ -3,12 +3,14 @@
 #include "connexion.h"
 #include "livrewidget.h"
 #include "livre.h"
+#include "ajoutlivredialog.h"
 #include <QtWidgets>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QDebug>
 #include <QX11Info>
+
 
 
 LivreWidget::LivreWidget(QWidget *parent) // Constructeur
@@ -23,8 +25,25 @@ LivreWidget::LivreWidget(QWidget *parent) // Constructeur
     m_tableModel->select(); // Sélection des données de la table
     m_tableView->setModel(m_tableModel); // Définition du modèle à utiliser
 
-    QPushButton *ajouterButton = new QPushButton(tr("Ajouter")); // Création d'un bouton
-    connect(ajouterButton, &QPushButton::clicked, this, &LivreWidget::ajouterLivre); // Connexion du signal clicked() du bouton à la méthode ajouterLivre()
+    QMenu *menu = new QMenu(this);
+    QAction *action = new QAction(tr("Quitter"), this);
+    connect(action, &QAction::triggered, qApp, &QApplication::quit);
+    menu->addAction(action);
+
+    QPushButton *menuButton = new QPushButton(tr("Menu"));
+    menuButton->setMenu(menu);
+
+    // the menu is't visible
+    menuButton->showMenu();
+    
+
+
+    m_tableView->setColumnHidden(0, true); // Masquer la colonne 0
+
+
+
+    QPushButton *ajouterButton = new QPushButton(tr("Ajouter"));
+    connect(ajouterButton, &QPushButton::clicked, this, &LivreWidget::ajouterLivre);
 
     QPushButton *supprimerButton = new QPushButton(tr("Supprimer"));
     connect(supprimerButton, &QPushButton::clicked, this, &LivreWidget::supprimerLivre);
@@ -38,6 +57,7 @@ LivreWidget::LivreWidget(QWidget *parent) // Constructeur
     QPushButton *trierButton = new QPushButton(tr("Trier"));
     connect(trierButton, &QPushButton::clicked, this, &LivreWidget::trierLivres);
 
+
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->addWidget(ajouterButton);
     buttonLayout->addWidget(supprimerButton);
@@ -50,24 +70,12 @@ LivreWidget::LivreWidget(QWidget *parent) // Constructeur
 
 void LivreWidget::ajouterLivre()
 {
-    bool ok;
-    QString titre = QInputDialog::getText(this, tr("Ajouter un livre"), tr("Titre :"), QLineEdit::Normal, QString(), &ok);
-    if (ok && !titre.isEmpty()) {
-        QString auteur = QInputDialog::getText(this, tr("Ajouter un livre"), tr("Auteur :"), QLineEdit::Normal, QString(), &ok);
-        if (ok && !auteur.isEmpty()) {
-            bool anneeOk;
-            int annee = QInputDialog::getInt(this, tr("Ajouter un livre"), tr("Année :"), 0, 0, 2100, 1, &anneeOk);
-            if (anneeOk) {
-                Livre livre(titre, auteur, annee);
-                if (livre.ajouter()) {
-                    m_tableModel->select();
-                } else {
-                    QMessageBox::critical(this, tr("Erreur"), tr("Impossible d'ajouter le livre."));
-                }
-            }
-        }
+    AjoutLivreDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        m_tableModel->select();
     }
 }
+
 
 void LivreWidget::supprimerLivre()
 {
