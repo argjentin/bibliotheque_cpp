@@ -5,15 +5,16 @@
 #include <QDebug>
 #include <QX11Info>
 
-Livre::Livre(const QString& titre, const QString& auteur, int annee, bool disponible) // Constructeur
-    : m_titre(titre), m_auteur(auteur), m_annee(annee), m_disponible(disponible) // Initialisation des attributs
+Livre::Livre(const QString& type,const QString& titre, const QString& auteur, int annee, bool disponible) // Constructeur
+    : m_type(type),m_titre(titre), m_auteur(auteur), m_annee(annee), m_disponible(disponible) // Initialisation des attributs
 {
 }
 
 bool Livre::ajouter()
 {
     QSqlQuery query;
-    query.prepare("INSERT INTO livres (titre, auteur, annee, disponible) VALUES (:titre, :auteur, :annee, :disponible)");
+    query.prepare("INSERT INTO livres (type, titre, auteur, annee, disponible) VALUES (:type, :titre, :auteur, :annee, :disponible)");
+    query.bindValue(":type", m_type);
     query.bindValue(":titre", m_titre);
     query.bindValue(":auteur", m_auteur);
     query.bindValue(":annee", m_annee);

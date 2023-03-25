@@ -6,7 +6,6 @@
 #include <QSqlTableModel>
 #include <QTableView>
 
-
 class LivreWidget : public QWidget
 {
     Q_OBJECT // Macro pour utiliser les slots et signaux
@@ -21,6 +20,9 @@ public slots: // Déclaration des slots
     void rendreLivre();
     void trierLivres();
     void actualiserListeLivres();
+    void exportToTxtMenu();
+    void setFullScreenMenu();
+    void setNormalScreenMenu();
 
 private:
     QTableView *m_tableView; // Pointeur vers un QTableView

@@ -3,8 +3,8 @@
 
 #include <QDialog>
 #include <QLineEdit>
-#include <QSpinBox>
 #include <QPushButton>
+#include <QComboBox>
 #include <QDateEdit>
 #include "livre.h"
 
@@ -19,6 +19,7 @@ private slots:
     void ajouterLivre();
 
 private:
+    QComboBox *m_typeEdit;
     QLineEdit *m_titreEdit;
     QLineEdit *m_auteurEdit;
     QDateEdit *m_anneeEdit;

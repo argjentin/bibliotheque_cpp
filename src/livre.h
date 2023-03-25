@@ -9,7 +9,7 @@
 class Livre
 {
 public:
-    Livre(const QString& titre = "", const QString& auteur = "", int annee = 0, bool disponible = true); // Constructeur
+    Livre(const QString& type = "",const QString& titre = "", const QString& auteur = "", int annee = 0, bool disponible = true); // Constructeur
 
     bool ajouter(); 
     static bool supprimer(int id);
@@ -17,6 +17,7 @@ public:
     static bool rendre(int id);
 
 private: // Attributs privés
+    QString m_type;
     QString m_titre; 
     QString m_auteur;
     int m_annee;
