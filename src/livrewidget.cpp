@@ -4,6 +4,7 @@
 #include "livrewidget.h"
 #include "livre.h"
 #include "ajoutlivredialog.h"
+#include "triDialog.h"
 #include <QtWidgets>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -94,7 +95,7 @@ void LivreWidget::exportToTxtMenu()
             QTextStream out(&file);
 
             // Écrire les en-têtes de colonnes
-            out << "ID\tTitre\tAuteur\tAnnée\tDisponible\n";
+            out << "ID\tType\tTitre\tAuteur\tAnnée\tDisponible\n";
 
             // Parcourir les données du modèle de la table
             int rows = m_tableModel->rowCount();
@@ -174,15 +175,14 @@ void LivreWidget::rendreLivre()
 
 void LivreWidget::trierLivres()
 {
-    m_tableModel->setSort(3, Qt::AscendingOrder);
-    m_tableModel->select();
+    TriDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        m_tableModel->setSort(dialog.getColonne(), dialog.getOrdre());
+        m_tableModel->select();
+    }
 }
-
-
 
 void LivreWidget::actualiserListeLivres()
 {
     m_tableModel->select();
 }
-
-
