@@ -7,19 +7,23 @@ CREATE TABLE livres (
     auteur VARCHAR(50) NOT NULL,
     annee INT NOT NULL,
     disponible INT NOT NULL,
+    personne_nom VARCHAR(50),
+    personne_prenom VARCHAR(50),  
+    date_emprunt DATE,
+    date_retour DATE,
     PRIMARY KEY (id)
 );
 
--- roman
-INSERT INTO livres (type, titre, auteur, annee, disponible) VALUES ('roman', 'titre1', 'auteur1', 2010, 1);
-INSERT INTO livres (type, titre, auteur, annee, disponible) VALUES ('roman', 'titre2', 'auteur2', 2011, 1);
-INSERT INTO livres (type, titre, auteur, annee, disponible) VALUES ('roman', 'titre3', 'auteur3', 2012, 1);
--- dvd
-INSERT INTO livres (type, titre, auteur, annee, disponible) VALUES ('dvd', 'titre15', 'auteur15', 2015, 1);
-INSERT INTO livres (type, titre, auteur, annee, disponible) VALUES ('dvd', 'titre16', 'auteur16', 2016, 1);
--- magazine
-INSERT INTO livres (type, titre, auteur, annee, disponible) VALUES ('magazine', 'titre17', 'auteur17', 2017, 1);
-INSERT INTO livres (type, titre, auteur, annee, disponible) VALUES ('magazine', 'titre18', 'auteur18', 2018, 1);
--- bd
-INSERT INTO livres (type, titre, auteur, annee, disponible) VALUES ('bd', 'titre19', 'auteur19', 2019, 1);
-INSERT INTO livres (type, titre, auteur, annee, disponible) VALUES ('bd', 'titre20', 'auteur20', 2020, 1);
+-- roman 5 insert values
+insert into livres (type, titre, auteur, annee, disponible, personne_nom, personne_prenom, date_emprunt, date_retour) values ('roman', 'Le petit prince', 'Antoine de Saint-Exupéry', 1943, 1, NULL, NULL, NULL, NULL);
+insert into livres (type, titre, auteur, annee, disponible, personne_nom, personne_prenom, date_emprunt, date_retour) values ('roman', 'Le seigneur des anneaux', 'J.R.R. Tolkien', 1954, 1, NULL, NULL, NULL, NULL);
+insert into livres (type, titre, auteur, annee, disponible, personne_nom, personne_prenom, date_emprunt, date_retour) values ('roman', 'Le rouge et le noir', 'Stendhal', 1830, 1, NULL, NULL, NULL, NULL);
+-- dvd 5 insert values
+insert into livres (type, titre, auteur, annee, disponible, personne_nom, personne_prenom, date_emprunt, date_retour) values ('dvd', 'Le seigneur des anneaux', 'Peter Jackson', 2001, 1, NULL, NULL, NULL, NULL);
+insert into livres (type, titre, auteur, annee, disponible, personne_nom, personne_prenom, date_emprunt, date_retour) values ('dvd', 'Le seigneur des anneaux', 'Peter Jackson', 2002, 1, NULL, NULL, NULL, NULL);
+-- magazine 5 insert values
+insert into livres (type, titre, auteur, annee, disponible, personne_nom, personne_prenom, date_emprunt, date_retour) values ('magazine', 'Le monde', ' ', 2018, 1, NULL, NULL, NULL, NULL);
+insert into livres (type, titre, auteur, annee, disponible, personne_nom, personne_prenom, date_emprunt, date_retour) values ('magazine', 'Le monde', ' ', 2018, 1, NULL, NULL, NULL, NULL);
+-- bd 5 insert values
+-- insert into livres (type, titre, auteur, annee, disponible, personne_nom, personne_prenom, date_emprunt, date_retour) values ('bd', 'Astérix', 'René Goscinny', 1959, 1, NULL, NULL, NULL, NULL);
+insert into livres (type, titre, auteur, annee, disponible, personne_nom, personne_prenom, date_emprunt, date_retour) values ('bd', 'Astérix', 'René Goscinny', 1959, 1, NULL, NULL, NULL, NULL);

@@ -1,10 +1,9 @@
-// connexion à la base de données
-
 #include "connexion.h"
 #include "livrewidget.h"
 #include "livre.h"
 #include "ajoutlivredialog.h"
 #include "triDialog.h"
+#include "empruntDialog.h"
 #include <QtWidgets>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -18,23 +17,41 @@
 #include <QFile>
 
 
-LivreWidget::LivreWidget(QWidget *parent) // Constructeur
-    : QWidget(parent), m_tableView(new QTableView), m_tableModel(new QSqlTableModel) 
+LivreWidget::LivreWidget(QWidget *parent)
+    : QWidget(parent), m_tableView(new QTableView), m_tableLivres(new QSqlTableModel)
 {
     QVBoxLayout *layout = new QVBoxLayout; // Création d'un layout vertical
     layout->addWidget(m_tableView);
     setLayout(layout);
-    
-    // taille de la fenêtre sans impacter les fonctions de la fenêtre
-    setMinimumSize(800, 600);
 
+    // Création du modèle de données
+    m_tableLivres->setTable("livres");
+    m_tableLivres->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    m_tableLivres->select();
 
-    m_tableModel->setTable("livres"); // Définition de la table à utiliser
-    m_tableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    m_tableModel->select(); // Sélection des données de la table
-    m_tableView->setModel(m_tableModel); // Définition du modèle à utiliser
+    // Création de la vue
+    m_tableView->setModel(m_tableLivres);
+    m_tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    m_tableView->setColumnHidden(0, true); // Masquer la colonne 0
+    // taille minimale de la fenêtre
+    setMinimumSize(915, 600);
+
+    // cacher colonnes de l'id
+    m_tableView->setColumnHidden(0, true);
+
+    // renommer les colonnes
+    m_tableLivres->setHeaderData(1, Qt::Horizontal, tr("Genre"));
+    m_tableLivres->setHeaderData(2, Qt::Horizontal, tr("Titre"));
+    m_tableLivres->setHeaderData(3, Qt::Horizontal, tr("Auteur"));
+    m_tableLivres->setHeaderData(4, Qt::Horizontal, tr("Année"));
+    m_tableLivres->setHeaderData(5, Qt::Horizontal, tr("Disponibilité"));
+    m_tableLivres->setHeaderData(6, Qt::Horizontal, tr("Nom"));
+    m_tableLivres->setHeaderData(7, Qt::Horizontal, tr("Prénom"));
+    m_tableLivres->setHeaderData(8, Qt::Horizontal, tr("Date d'emprunt"));
+    m_tableLivres->setHeaderData(9, Qt::Horizontal, tr("Date de retour"));
+    m_tableView->resizeColumnsToContents(); // ajuster la taille des colonnes
 
     // création du menu
     QMenuBar *menuBar = new QMenuBar(this);
@@ -53,7 +70,6 @@ LivreWidget::LivreWidget(QWidget *parent) // Constructeur
     QAction *normalScreenAction = viewMenu->addAction(tr("Affichage normal"));
     connect(normalScreenAction, &QAction::triggered, this, &LivreWidget::setNormalScreenMenu);
 
-    // set the menu bar to the main window
     layout -> setMenuBar(menuBar);
 
     QPushButton *ajouterButton = new QPushButton(tr("Ajouter"));
@@ -82,7 +98,6 @@ LivreWidget::LivreWidget(QWidget *parent) // Constructeur
     layout->addLayout(buttonLayout);
 }
 
-
 void LivreWidget::exportToTxtMenu()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Exporter la liste des livres"), QDir::homePath(), tr("Fichiers texte (*.txt)"));
@@ -95,16 +110,16 @@ void LivreWidget::exportToTxtMenu()
             QTextStream out(&file);
 
             // Écrire les en-têtes de colonnes
-            out << "ID\tType\tTitre\tAuteur\tAnnée\tDisponible\n";
+            out << "ID\tType\tTitre\tAuteur\tAnnée\tDisponible\tEmprunté par\tDate d'emprunt\tDate de retour";
 
             // Parcourir les données du modèle de la table
-            int rows = m_tableModel->rowCount();
-            int cols = m_tableModel->columnCount();
+            int rows = m_tableLivres->rowCount();
+            int cols = m_tableLivres->columnCount();
             for (int i = 0; i < rows; i++) {
+                out << endl;
                 for (int j = 0; j < cols; j++) {
-                    out << m_tableModel->data(m_tableModel->index(i, j)).toString() << "\t";
+                    out << m_tableLivres->data(m_tableLivres->index(i, j)).toString() << "\t";
                 }
-                out << "\n";
             }
 
             file.close();
@@ -129,20 +144,23 @@ void LivreWidget::ajouterLivre()
 {
     AjoutLivreDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-        m_tableModel->select();
+        m_tableLivres->select();
     }
 }
 
-
 void LivreWidget::supprimerLivre()
 {
-    int row = m_tableView->currentIndex().row();
-    if (row >= 0) {
-        int id = m_tableModel->data(m_tableModel->index(row, 0)).toInt();
-        if (Livre::supprimer(id)) {
-            m_tableModel->select();
-        } else {
-            QMessageBox::critical(this, tr("Erreur"), tr("Impossible de supprimer le livre."));
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, tr("Supprimer un livre"), tr("Êtes-vous sûr de vouloir supprimer ce livre ?"), QMessageBox::Oui|QMessageBox::Non);
+    if (reply == QMessageBox::Yes) {
+        int row = m_tableView->currentIndex().row();
+        if (row >= 0) {
+            int id = m_tableLivres->data(m_tableLivres->index(row, 0)).toInt();
+            if (Livre::supprimer(id)) {
+                m_tableLivres->select();
+            } else {
+                QMessageBox::critical(this, tr("Erreur"), tr("Impossible de supprimer le livre."));
+            }
         }
     }
 }
@@ -151,24 +169,47 @@ void LivreWidget::emprunterLivre()
 {
     int row = m_tableView->currentIndex().row();
     if (row >= 0) {
-        int id = m_tableModel->data(m_tableModel->index(row, 0)).toInt();
-        if (Livre::emprunter(id)) {
-            m_tableModel->select();
-        } else {
-            QMessageBox::critical(this, tr("Erreur"), tr("Impossible d'emprunter le livre."));
+        int id = m_tableLivres->data(m_tableLivres->index(row, 0)).toInt();
+        if (Livre::estEmprunte(id)) {
+            QMessageBox::critical(this, tr("Erreur"), tr("Le livre est déjà emprunté."));
+            return;
+        }
+    }
+    EmpruntDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        int row = m_tableView->currentIndex().row();
+        if (row >= 0) {
+            int id = m_tableLivres->data(m_tableLivres->index(row, 0)).toInt();
+            if (Livre::emprunter(id, dialog.getNom(), dialog.getPrenom(), dialog.getDateEmprunt())) {
+                m_tableLivres->select();
+            } else {
+                QMessageBox::critical(this, tr("Erreur"), tr("Impossible d'emprunter le livre."));
+            }
         }
     }
 }
 
 void LivreWidget::rendreLivre()
-{
+{   
     int row = m_tableView->currentIndex().row();
     if (row >= 0) {
-        int id = m_tableModel->data(m_tableModel->index(row, 0)).toInt();
-        if (Livre::rendre(id)) {
-            m_tableModel->select();
-        } else {
-            QMessageBox::critical(this, tr("Erreur"), tr("Impossible de rendre le livre."));
+        int id = m_tableLivres->data(m_tableLivres->index(row, 0)).toInt();
+        if (!Livre::estEmprunte(id)) {
+            QMessageBox::critical(this, tr("Erreur"), tr("Le livre n'est pas emprunté."));
+            return;
+        }
+    }
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, tr("Rendre un livre"), tr("Êtes-vous sûr de vouloir rendre ce livre ?"), QMessageBox::Oui|QMessageBox::Non);
+    if (reply == QMessageBox::Yes) {
+        int row = m_tableView->currentIndex().row();
+        if (row >= 0) {
+            int id = m_tableLivres->data(m_tableLivres->index(row, 0)).toInt();
+            if (Livre::rendre(id)) {
+                m_tableLivres->select();
+            } else {
+                QMessageBox::critical(this, tr("Erreur"), tr("Impossible de rendre le livre."));
+            }
         }
     }
 }
@@ -177,12 +218,12 @@ void LivreWidget::trierLivres()
 {
     TriDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-        m_tableModel->setSort(dialog.getColonne(), dialog.getOrdre());
-        m_tableModel->select();
+        m_tableLivres->setSort(dialog.getColonne(), dialog.getOrdre());
+        m_tableLivres->select();
     }
 }
 
 void LivreWidget::actualiserListeLivres()
 {
-    m_tableModel->select();
+    m_tableLivres->select();
 }

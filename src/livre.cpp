@@ -5,15 +5,31 @@
 #include <QDebug>
 #include <QX11Info>
 
-Livre::Livre(const QString& type,const QString& titre, const QString& auteur, int annee, bool disponible) // Constructeur
-    : m_type(type),m_titre(titre), m_auteur(auteur), m_annee(annee), m_disponible(disponible) // Initialisation des attributs
+Livre::Livre(const QString& type,const QString& titre, const QString& auteur, int annee, bool disponible, QString nom, QString prenom, QDate dateEmprunt, QDate dateRetour)
+    : m_type(type),m_titre(titre), m_auteur(auteur), m_annee(annee), m_disponible(disponible), m_nom(nom), m_prenom(prenom), m_dateEmprunt(dateEmprunt), m_dateRetour(dateRetour)
 {
 }
 
 bool Livre::ajouter()
 {
+    // Vérification de l'existence du livre
     QSqlQuery query;
-    query.prepare("INSERT INTO livres (type, titre, auteur, annee, disponible) VALUES (:type, :titre, :auteur, :annee, :disponible)");
+    query.prepare("SELECT id FROM livres WHERE titre = :titre AND auteur = :auteur AND annee = :annee");
+    query.bindValue(":titre", m_titre);
+    query.bindValue(":auteur", m_auteur);
+    query.bindValue(":annee", m_annee);
+
+    if (!query.exec()) {
+        qDebug() << "Erreur lors de la vérification de l'existence d'un livre:" << query.lastError().text();
+        return false;
+    }
+
+    if (query.next()) {
+        qDebug() << "Le livre existe déjà";
+        return false;
+    }
+
+    query.prepare("INSERT INTO livres (type,titre, auteur, annee, disponible) VALUES (:type,:titre, :auteur, :annee, :disponible)");
     query.bindValue(":type", m_type);
     query.bindValue(":titre", m_titre);
     query.bindValue(":auteur", m_auteur);
@@ -42,11 +58,33 @@ bool Livre::supprimer(int id)
     return true;
 }
 
-bool Livre::emprunter(int id)
+bool Livre::estEmprunte(int id)
 {
     QSqlQuery query;
-    query.prepare("UPDATE livres SET disponible = 0 WHERE id = :id AND disponible = 1");
+    query.prepare("SELECT disponible FROM livres WHERE id = :id");
     query.bindValue(":id", id);
+
+    if (!query.exec()) {
+        qDebug() << "Erreur lors de la vérification de l'emprunt d'un livre:" << query.lastError().text();
+        return false;
+    }
+
+    if (query.next()) {
+        return !query.value(0).toBool();
+    }
+
+    return false;
+}
+
+bool Livre::emprunter(int id, QString nom, QString prenom, QDate date)
+{
+    QSqlQuery query;
+    query.prepare("UPDATE livres SET disponible = 0, personne_nom = :nom, personne_prenom = :prenom, date_emprunt = :date, date_retour = :dateRetour WHERE id = :id AND disponible = 1");
+    query.bindValue(":id", id);
+    query.bindValue(":nom", nom);
+    query.bindValue(":prenom", prenom);
+    query.bindValue(":date", date);
+    query.bindValue(":dateRetour", date.addDays(15));
 
     if (!query.exec()) {
         qDebug() << "Erreur lors de l'emprunt d'un livre:" << query.lastError().text();
@@ -59,16 +97,17 @@ bool Livre::emprunter(int id)
     }
 
     return true;
+
 }
 
 bool Livre::rendre(int id)
 {
     QSqlQuery query;
-    query.prepare("UPDATE livres SET disponible = 1 WHERE id = :id AND disponible = 0");
+    query.prepare("UPDATE livres SET disponible = 1, personne_nom = '', personne_prenom = '', date_emprunt = NULL, date_retour = NULL WHERE id = :id AND disponible = 0");
     query.bindValue(":id", id);
 
     if (!query.exec()) {
-        qDebug() << "Erreur lors de la restitution d'un livre:" << query.lastError().text();
+        qDebug() << "Erreur lors du retour d'un livre:" << query.lastError().text();
         return false;
     }
 

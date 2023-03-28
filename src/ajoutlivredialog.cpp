@@ -35,7 +35,6 @@ AjoutLivreDialog::AjoutLivreDialog(QWidget *parent)
 
 void AjoutLivreDialog::ajouterLivre()
 {   
-    // QString type = m_typeEdit->currentText();
     QString type = m_typeEdit->currentText();
     QString titre = m_titreEdit->text();
     QString auteur = m_auteurEdit->text();

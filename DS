@@ -1,0 +1,18 @@
+LivreWidget::LivreWidget(QWidget *parent)
+    : QWidget(parent), m_tableView(new QTableView), m_tableJoin(new QSqlQueryModel)
+{
+    QVBoxLayout *layout = new QVBoxLayout; // Création d'un layout vertical
+    layout->addWidget(m_tableView);
+    setLayout(layout);
+
+    // Configuration de la requête SQL pour la jointure gauche
+    QString query = "SELECT livres.id, livres.type, livres.titre, livres.auteur, livres.annee, livres.disponible, emprunt.personne_nom, emprunt.personne_prenom, emprunt.date_emprunt, emprunt.date_retour FROM livres LEFT JOIN emprunt ON livres.id = emprunt.livre_id";
+    m_tableJoin->setQuery(query);
+
+    // Configuration de la vue
+    m_tableView->setModel(m_tableJoin);
+    m_tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    m_tableView->setAlternatingRowColors(true);
+    m_tableView->resizeColumnsToContents();

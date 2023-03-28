@@ -5,6 +5,7 @@
 #include <QX11Info>
 #include <QSqlTableModel>
 #include <QTableView>
+#include <QSqlRelationalTableModel>
 
 class LivreWidget : public QWidget
 {
@@ -26,7 +27,7 @@ public slots: // Déclaration des slots
 
 private:
     QTableView *m_tableView; // Pointeur vers un QTableView
-    QSqlTableModel *m_tableModel; // Pointeur vers un QSqlTableModel
+    QSqlTableModel *m_tableLivres; // Pointeur vers un QSqlTableModel
 };
 
 #endif // LIVREWIDGET_H

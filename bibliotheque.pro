@@ -20,5 +20,5 @@ QT += x11extras
 LIBS += -lmysqlclient
 
 # Input
-HEADERS += src/connexion.h src/livre.h src/livrewidget.h src/ajoutlivredialog.h src/triDialog.h
-SOURCES += src/connexion.cpp src/livre.cpp src/livrewidget.cpp src/main.cpp src/ajoutlivredialog.cpp src/triDialog.cpp
+HEADERS += src/connexion.h src/livre.h src/livrewidget.h src/ajoutlivredialog.h src/triDialog.h src/empruntDialog.h
+SOURCES += src/connexion.cpp src/livre.cpp src/livrewidget.cpp src/main.cpp src/ajoutlivredialog.cpp src/triDialog.cpp src/empruntDialog.cpp
