@@ -26,7 +26,6 @@ private:
     void afficherResultats(QString titre);
 
     QLineEdit *m_rechercheEdit;
-    QComboBox *m_titreCombo;
     QSqlTableModel *m_tableLivres;
     QTableView *m_tableView;
 

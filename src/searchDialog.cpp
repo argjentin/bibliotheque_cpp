@@ -6,7 +6,7 @@
 #include <QDebug>
 
 SearchDialog::SearchDialog(QWidget *parent)
-    : QDialog(parent), m_rechercheEdit(new QLineEdit), m_titreCombo(new QComboBox),
+    : QDialog(parent), m_rechercheEdit(new QLineEdit),
       m_tableView(new QTableView), m_tableLivres(new QSqlTableModel)
 {
     setWindowTitle(tr("Recherche de livres"));
@@ -16,7 +16,6 @@ SearchDialog::SearchDialog(QWidget *parent)
 
     QHBoxLayout *hLayout = new QHBoxLayout;
     hLayout->addWidget(new QLabel(tr("Titre")));
-    hLayout->addWidget(m_titreCombo);
     layout->addLayout(hLayout);
 
     QPushButton *lancerRechercheButton = new QPushButton(tr("Lancer la recherche"));
@@ -69,7 +68,6 @@ void SearchDialog::lancerRecherche()
 void SearchDialog::annulerRecherche()
 {
     m_rechercheEdit->clear();
-    m_titreCombo->clear();
     m_tableLivres->select();
 }
 
@@ -78,17 +76,15 @@ void SearchDialog::actualiserRecherche()
     QString titre = m_rechercheEdit->text();
 
     QSqlQuery query;
-    query.prepare("SELECT DISTINCT titre FROM livres WHERE titre LIKE :titre ORDER BY titre");
-    query.bindValue(":titre", titre + "%");
+    query.prepare("SELECT titre FROM livres WHERE titre LIKE :titre");
+    query.bindValue(":titre", QString("%%1%").arg(titre));
     query.exec();
 
-    m_titreCombo->clear();
-    while (query.next()) {
-        m_titreCombo->addItem(query.value(0).toString());
+    if (query.next()) {
+        afficherResultats(titre);
     }
-
-    if (m_titreCombo->count() > 0) {
-        m_titreCombo->setCurrentIndex(0);
+    else {
+        m_tableLivres->select();
     }
 }
 
@@ -96,5 +92,13 @@ void SearchDialog::afficherResultats(QString titre)
 {
     m_tableLivres->setFilter(QString("titre LIKE '%1%'").arg(titre));
     m_tableLivres->select();
+
+    if (m_tableLivres->rowCount() == 0) {
+        QMessageBox::information(this, tr("Recherche de livres"), tr("Aucun livre ne correspond à votre recherche."));
+    }
+
+    else {
+        QMessageBox::information(this, tr("Recherche de livres"), tr("%1 livre(s) correspond(ent) à votre recherche.").arg(m_tableLivres->rowCount()));
+    }
 }
 

@@ -16,6 +16,7 @@
 #include <QAction>
 #include <QFileDialog>
 #include <QFile>
+#include <QMessageBox>
 
 
 LivreWidget::LivreWidget(QWidget *parent)
@@ -58,7 +59,6 @@ LivreWidget::LivreWidget(QWidget *parent)
     QMenuBar *menuBar = new QMenuBar(this);
     QMenu *fileMenu = menuBar->addMenu(tr("Fichier"));
     QMenu *viewMenu = menuBar->addMenu(tr("Affichage"));
-    QMenu *searchMenu = menuBar->addMenu(tr("Recherche"));
 
     // Ajout des actions au menu Fichier
     QAction *exportToTxtAction = fileMenu->addAction(tr("Exporter en .txt"));
@@ -71,10 +71,6 @@ LivreWidget::LivreWidget(QWidget *parent)
     connect(fullScreenAction, &QAction::triggered, this, &LivreWidget::setFullScreenMenu);
     QAction *normalScreenAction = viewMenu->addAction(tr("Affichage normal"));
     connect(normalScreenAction, &QAction::triggered, this, &LivreWidget::setNormalScreenMenu);
-
-    // Ajout de l'action au menu Recherche
-    QAction *rechercherAction = searchMenu->addAction(tr("Rechercher"));
-    connect(rechercherAction, &QAction::triggered, this, &LivreWidget::rechercherLivresMenu);
 
     layout -> setMenuBar(menuBar);
 
@@ -160,7 +156,7 @@ void LivreWidget::ajouterLivre()
 void LivreWidget::supprimerLivre()
 {
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, tr("Supprimer un livre"), tr("Êtes-vous sûr de vouloir supprimer ce livre ?"), QMessageBox::Oui|QMessageBox::Non);
+    reply = QMessageBox::question(this, tr("Supprimer un livre"), tr("Êtes-vous sûr de vouloir supprimer ce livre ?"), QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {
         int row = m_tableView->currentIndex().row();
         if (row >= 0) {
@@ -209,7 +205,7 @@ void LivreWidget::rendreLivre()
         }
     }
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, tr("Rendre un livre"), tr("Êtes-vous sûr de vouloir rendre ce livre ?"), QMessageBox::Oui|QMessageBox::Non);
+    reply = QMessageBox::question(this, tr("Rendre un livre"), tr("Êtes-vous sûr de vouloir rendre ce livre ?"), QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {
         int row = m_tableView->currentIndex().row();
         if (row >= 0) {
