@@ -12,7 +12,7 @@ Puis copier coller le fichier **bd.sql** dans votre terminal
 ## Lancement du projet
 
 git clone **url**  
-modifier vos infos dans **connexion.cpp**  
+modifier les infos dans **connexion.cpp** pour la connexion SQL
 qmake  
 make  
 ./bibliotheque
