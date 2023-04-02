@@ -7,7 +7,7 @@ mysql -u utilisateur -pMotDePasse sur terminal
 
 **Créer** base de donnée avec **CREATE DATABASE biblio**
 
-Puis copier coller le fichier **bd.sql** dans votre terminal 
+Puis copier coller le fichier **db.sql** dans votre terminal 
 
 ## Lancement du projet
 
