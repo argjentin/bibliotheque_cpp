@@ -10,11 +10,10 @@ TriDialog::TriDialog(QWidget *parent)
       m_cancelButton(new QPushButton(tr("Annuler")))
 {
     // Remplir la liste des colonnes
-    m_colonneComboBox->addItem(tr("type"));
-    m_colonneComboBox->addItem(tr("titre"));
-    m_colonneComboBox->addItem(tr("auteur"));
-    m_colonneComboBox->addItem(tr("annee"));
-    m_colonneComboBox->addItem(tr("disponible"));
+    m_colonneComboBox->addItem(tr("Genre"));
+    m_colonneComboBox->addItem(tr("Titre"));
+    m_colonneComboBox->addItem(tr("Année"));
+    m_colonneComboBox->addItem(tr("Disponible"));
 
     // Remplir la liste des ordres
     m_ordreComboBox->addItem(tr("Croissant"));

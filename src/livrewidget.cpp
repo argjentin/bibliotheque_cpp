@@ -118,12 +118,14 @@ void LivreWidget::exportToTxtMenu()
             out << "ID\tType\tTitre\tAuteur\tAnnée\tDisponible\tEmprunté par\tDate d'emprunt\tDate de retour";
 
             // Parcourir les données du modèle de la table
-            int rows = m_tableLivres->rowCount();
-            int cols = m_tableLivres->columnCount();
-            for (int i = 0; i < rows; i++) {
-                out << endl;
-                for (int j = 0; j < cols; j++) {
-                    out << m_tableLivres->data(m_tableLivres->index(i, j)).toString() << "\t";
+            if (m_tableLivres) {
+                int rows = m_tableLivres->rowCount();
+                int cols = m_tableLivres->columnCount();
+                for (int i = 0; i < rows; i++) {
+                    out << '\n';
+                    for (int j = 0; j < cols; j++) {
+                        out << m_tableLivres->data(m_tableLivres->index(i, j)).toString() << '\t';
+                    }
                 }
             }
 

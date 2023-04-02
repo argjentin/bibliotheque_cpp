@@ -40,8 +40,8 @@ EmpruntDialog::EmpruntDialog(QWidget *parent) : QDialog(parent)
     connect(m_cancelButton, &QPushButton::clicked, this, &EmpruntDialog::reject);
 
     // Ajouter les layouts au layout principal
-    mainLayout->addLayout(nomLayout);
     mainLayout->addLayout(prenomLayout);
+    mainLayout->addLayout(nomLayout);
     mainLayout->addLayout(dateLayout);
     mainLayout->addLayout(buttonLayout);
 
