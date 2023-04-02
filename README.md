@@ -1,5 +1,18 @@
-# bibliotheque_cpp
+# Gestion de  bibliothèque avec Qt
 
-### qmake 
-### make
-### ./bibliotheque
+## Installation
+
+Installez MySQL sur votre machine, puis connectez vous via 
+mysql -u utilisateur -pMotDePasse sur terminal
+
+**Créer** base de donnée avec **CREATE DATABASE biblio**
+
+Puis copier coller le fichier **bd.sql** dans votre terminal 
+
+## Lancement du projet
+
+git clone **url**
+modifier vos infos dans **connexion.cpp**
+qmake 
+make
+./bibliotheque
