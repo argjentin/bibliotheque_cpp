@@ -4,8 +4,11 @@
 #include <QString>
 #include <QSqlQuery>
 #include <QSqlQueryModel>
-#include <QX11Info>
 #include <QDate>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QDebug>
 
 class Livre
 {

@@ -1,9 +1,4 @@
 #include "searchDialog.h"
-#include <QtWidgets>
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
-#include <QDebug>
 
 SearchDialog::SearchDialog(QWidget *parent)
     : QDialog(parent), m_rechercheEdit(new QLineEdit),

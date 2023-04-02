@@ -6,6 +6,11 @@
 #include <QComboBox>
 #include <QSqlTableModel>
 #include <QTableView>
+#include <QtWidgets>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QDebug>
 
 class SearchDialog : public QDialog
 {

@@ -18,9 +18,10 @@ public:
     TriDialog(QWidget *parent = nullptr);
     int getColonne() const;
     Qt::SortOrder getOrdre() const;
+    Qt::SortOrder getOrdreAnnee() const;
 
 signals:
-    void trierLivres(int colonne, Qt::SortOrder ordre);
+    void trierLivres(int colonne, Qt::SortOrder ordre, Qt::SortOrder ordreAnnee);
 
 private slots:
     void onOkButtonClicked();
@@ -28,8 +29,10 @@ private slots:
 private:
     QLabel *m_colonneLabel;
     QLabel *m_ordreLabel;
+    QLabel *m_ordreAnneeLabel;
     QComboBox *m_colonneComboBox;
     QComboBox *m_ordreComboBox;
+    QComboBox *m_ordreAnneeComboBox;
     QPushButton *m_okButton;
     QPushButton *m_cancelButton;
 };

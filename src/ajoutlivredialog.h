@@ -6,6 +6,10 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QDateEdit>
+#include <QLabel>
+#include <QFormLayout>
+#include <QHBoxLayout>
+#include <QMessageBox>
 #include "livre.h"
 
 class AjoutLivreDialog : public QDialog

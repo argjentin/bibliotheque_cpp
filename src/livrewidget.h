@@ -2,10 +2,20 @@
 #define LIVREWIDGET_H
 
 #include <QWidget>
-#include <QX11Info>
 #include <QSqlTableModel>
 #include <QTableView>
 #include <QSqlRelationalTableModel>
+#include <QtWidgets>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QDebug>
+#include <QMenuBar>
+#include <QMenu>
+#include <QAction>
+#include <QFileDialog>
+#include <QFile>
+#include <QMessageBox>
 
 class LivreWidget : public QWidget
 {

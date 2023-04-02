@@ -1,9 +1,4 @@
 #include "livre.h"
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
-#include <QDebug>
-#include <QX11Info>
 
 Livre::Livre(const QString& type,const QString& titre, const QString& auteur, int annee, bool disponible, QString nom, QString prenom, QDate dateEmprunt, QDate dateRetour)
     : m_type(type),m_titre(titre), m_auteur(auteur), m_annee(annee), m_disponible(disponible), m_nom(nom), m_prenom(prenom), m_dateEmprunt(dateEmprunt), m_dateRetour(dateRetour)

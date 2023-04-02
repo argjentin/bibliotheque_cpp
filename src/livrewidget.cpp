@@ -5,18 +5,6 @@
 #include "triDialog.h"
 #include "empruntDialog.h"
 #include "searchDialog.h"
-#include <QtWidgets>
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
-#include <QDebug>
-#include <QX11Info>
-#include <QMenuBar>
-#include <QMenu>
-#include <QAction>
-#include <QFileDialog>
-#include <QFile>
-#include <QMessageBox>
 
 
 LivreWidget::LivreWidget(QWidget *parent)
@@ -225,7 +213,14 @@ void LivreWidget::trierLivres()
 {
     TriDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-        m_tableLivres->setSort(dialog.getColonne(), dialog.getOrdre());
+        int colonne = dialog.getColonne();
+        Qt::SortOrder ordre = dialog.getOrdre();
+        Qt::SortOrder ordreAnnee = dialog.getOrdreAnnee();
+        if (colonne == 2) { // Tri par année
+            m_tableLivres->setSort(colonne, ordreAnnee);
+        } else {
+            m_tableLivres->setSort(colonne, ordre);
+        }
         m_tableLivres->select();
     }
 }

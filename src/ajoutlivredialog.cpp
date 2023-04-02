@@ -1,9 +1,4 @@
 #include "ajoutlivredialog.h"
-#include <QLabel>
-#include <QFormLayout>
-#include <QHBoxLayout>
-#include <QMessageBox>
-#include <QX11Info>
 
 AjoutLivreDialog::AjoutLivreDialog(QWidget *parent)
     : QDialog(parent), m_typeEdit(new QComboBox), m_titreEdit(new QLineEdit), m_auteurEdit(new QLineEdit), m_anneeEdit(new QDateEdit), m_ajouterButton(new QPushButton("Ajouter"))
