@@ -6,8 +6,8 @@ Connexion::Connexion() {
     db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("localhost");
     db.setDatabaseName("biblio");
-    db.setUserName("akorbi");
-    db.setPassword("0325");
+    db.setUserName("");
+    db.setPassword("");
 }
 
 // Destructeur
