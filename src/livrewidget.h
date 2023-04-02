@@ -24,6 +24,7 @@ public slots: // Déclaration des slots
     void exportToTxtMenu();
     void setFullScreenMenu();
     void setNormalScreenMenu();
+    void afficherSearchDialog();
 
 private:
     QTableView *m_tableView; // Pointeur vers un QTableView

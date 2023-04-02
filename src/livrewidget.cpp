@@ -4,6 +4,7 @@
 #include "ajoutlivredialog.h"
 #include "triDialog.h"
 #include "empruntDialog.h"
+#include "searchDialog.h"
 #include <QtWidgets>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -57,6 +58,7 @@ LivreWidget::LivreWidget(QWidget *parent)
     QMenuBar *menuBar = new QMenuBar(this);
     QMenu *fileMenu = menuBar->addMenu(tr("Fichier"));
     QMenu *viewMenu = menuBar->addMenu(tr("Affichage"));
+    QMenu *searchMenu = menuBar->addMenu(tr("Recherche"));
 
     // Ajout des actions au menu Fichier
     QAction *exportToTxtAction = fileMenu->addAction(tr("Exporter en .txt"));
@@ -69,6 +71,10 @@ LivreWidget::LivreWidget(QWidget *parent)
     connect(fullScreenAction, &QAction::triggered, this, &LivreWidget::setFullScreenMenu);
     QAction *normalScreenAction = viewMenu->addAction(tr("Affichage normal"));
     connect(normalScreenAction, &QAction::triggered, this, &LivreWidget::setNormalScreenMenu);
+
+    // Ajout de l'action au menu Recherche
+    QAction *rechercherAction = searchMenu->addAction(tr("Rechercher"));
+    connect(rechercherAction, &QAction::triggered, this, &LivreWidget::rechercherLivresMenu);
 
     layout -> setMenuBar(menuBar);
 
@@ -87,6 +93,8 @@ LivreWidget::LivreWidget(QWidget *parent)
     QPushButton *trierButton = new QPushButton(tr("Trier"));
     connect(trierButton, &QPushButton::clicked, this, &LivreWidget::trierLivres);
 
+    QPushButton *rechercherButton = new QPushButton(tr("Rechercher"));
+    connect(rechercherButton, &QPushButton::clicked, this, &LivreWidget::afficherSearchDialog);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->addWidget(ajouterButton);
@@ -94,6 +102,7 @@ LivreWidget::LivreWidget(QWidget *parent)
     buttonLayout->addWidget(emprunterButton);
     buttonLayout->addWidget(rendreButton);
     buttonLayout->addWidget(trierButton);
+    buttonLayout->addWidget(rechercherButton);
 
     layout->addLayout(buttonLayout);
 }
@@ -222,6 +231,15 @@ void LivreWidget::trierLivres()
         m_tableLivres->select();
     }
 }
+
+void LivreWidget::afficherSearchDialog()
+{
+    SearchDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        m_tableLivres->select();
+    }
+}
+
 
 void LivreWidget::actualiserListeLivres()
 {
