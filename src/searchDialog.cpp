@@ -68,7 +68,16 @@ void SearchDialog::lancerRecherche()
 void SearchDialog::annulerRecherche()
 {
     m_rechercheEdit->clear();
+    m_tableLivres->setFilter("");
     m_tableLivres->select();
+
+    m_tableView->clearSelection();
+
+    // Désélectionner toutes les lignes de la vue de la table
+    // QModelIndexList selectedIndexList = m_tableView->selectionModel()->selectedIndexes();
+    // foreach (QModelIndex selectedIndex, selectedIndexList) {
+    //     m_tableView->selectionModel()->select(selectedIndex, QItemSelectionModel::Deselect);
+    // }
 }
 
 void SearchDialog::actualiserRecherche()
@@ -83,9 +92,12 @@ void SearchDialog::actualiserRecherche()
     if (query.next()) {
         afficherResultats(titre);
     }
+
     else {
-        m_tableLivres->select();
+        QMessageBox::information(this, tr("Recherche de livres"), tr("Aucun livre ne correspond à votre recherche."));
     }
+
+    emit actualiserListeLivres();
 }
 
 void SearchDialog::afficherResultats(QString titre)
