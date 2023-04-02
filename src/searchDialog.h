@@ -31,8 +31,7 @@ private:
     void afficherResultats(QString titre);
 
     QLineEdit *m_rechercheEdit;
-    QSqlTableModel *m_tableLivres;
     QTableView *m_tableView;
-
+    QSqlTableModel *m_tableLivres;
 };
 #endif // SEARCHDIALOG_H
